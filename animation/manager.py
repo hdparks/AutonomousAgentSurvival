@@ -41,8 +41,14 @@ class Manager():
 
             for archetype in self.archetypes.keys():
                 if self.fits_archetype(entity, archetype):
-                    self.collections.get(self.archetypes.get(archetype)).remove(entity)
-            self.entities.remove(entity)
+                    try:
+                        self.collections.get(self.archetypes.get(archetype)).remove(entity)
+                    except:
+                        print("element not found")
+            try:
+                self.entities.remove(entity)
+            except:
+                print("element not found")
             self.gc.remove(entity)
 
     def create_entities(self):

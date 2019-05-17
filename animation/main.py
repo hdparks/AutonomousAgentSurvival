@@ -59,6 +59,8 @@ def main(config_filename):
     ## LOAD IN ENTITIES HERE
     manager.world = World([1,0,0])
     manager.agent_map = []
+    manager.config = CONFIG
+    manager.DS = DS
     for agent in manager.world.agent_list:
         entity = {
             'pos':Position(
@@ -79,7 +81,6 @@ def main(config_filename):
             'spritesheet':SpriteSheet("animation/assets/Well.png",4,2,DS),
             'wellActive':WellActive(active = False),
         }
-        print(well, 'at',entity.get('pos').value)
         manager.create_entity(entity)
         manager.well_map.append(entity)
 

@@ -45,7 +45,7 @@ class World():
     def make_agents(self,agent_type_dist):
         self.good = int(self.population * agent_type_dist[1])
         self.bad = int(self.population * agent_type_dist[2])
-        self.agent_list = [Agent([1/3,1/3,1/3]) for _ in range(self.population)]
+        self.agent_list = [Agent([1/3,1/3,1/3],self) for _ in range(self.population)]
 
     def update_agent_dist_params(self,correct_well):
         # The first chunk is good
@@ -82,12 +82,36 @@ class World():
 
     def end_day(self):
         obs = np.array(self.current_day.observations)
-        dist = [percent_correct(obs,0),
-                percent_correct(obs,1),
-                percent_correct(obs,2)]
+        dist = [Tools.percent_correct(obs,0),
+                Tools.percent_correct(obs,1),
+                Tools.percent_correct(obs,2)]
         print("End of day report")
-        print(dist * obs.size)
         print(dist)
+
+        sorted_obs = obs[np.argsort(self.current_day.agent_order)]
+        # Update health
+        for i in range(len(self.agent_list)):
+            agent = self.agent_list[i]
+            if sorted_obs[i] == self.current_day.correct_well:
+                agent.health = 3
+            else:
+                agent.health -= 1
+
+        # Kill the sick
+        dead = 0
+        for i in range(len(self.agent_list)-1,-1,-1):
+            agent = self.agent_list[i]
+
+            if agent.health == 0:
+                dead += 1
+                self.agent_list.remove(agent)
+                if i < self.good:
+                    good -=1
+                elif i < self.good + self.bad:
+                    bad -= 1
+
+        print("{} citizens died today from lack of water".format(dead))
+        print("Current population: {}".format(len(self.agent_list)))
         self.start_day()
 
     def create_bad_agent(correct_well):

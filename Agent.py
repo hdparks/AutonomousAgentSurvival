@@ -13,7 +13,7 @@ class Agent():
 
     """
 
-    def __init__(self, dist_params, confidence = 10,world):
+    def __init__(self, dist_params, world, confidence = 20):
         #prior distribution parameters
         self.dist_params = dist_params
         self.confidence = confidence
@@ -30,7 +30,6 @@ class Agent():
     def set_dist_params(self, dist_params):
         self.dist_params = dist_params
 
-    def get_distance_utility(self):
 
     def act(self,observations):
         """
@@ -44,5 +43,5 @@ class Agent():
         n = len(observations)
 
         post_dist = self.dist_params * self.confidence + n * observed_dist
-        print(post_dist)
+
         return np.argmax( post_dist )
