@@ -44,4 +44,5 @@ class Agent():
 
         post_dist = self.dist_params * self.confidence + n * observed_dist
 
-        return np.argmax( post_dist )
+
+        return np.argmax( post_dist / self.dist_to_well )

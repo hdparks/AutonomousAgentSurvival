@@ -20,6 +20,7 @@ from .components.velocity import Velocity
 import json
 
 import random
+import numpy as np
 
 ## DEFAULT CONFIGURATION OBJECT
 COLORS = {
@@ -36,10 +37,10 @@ def events():
             pygame.quit()
             sys.exit()
 
-def main(config_filename):
+def main(world):
     pygame.init()
     CLOCK = pygame.time.Clock()
-    CONFIG = { 'W':900, 'H':600, 'caption':"Default",'FPS':60 }
+    CONFIG = { 'W':1020, 'H':695, 'caption':"Default",'FPS':60 }
     DS = pygame.display.set_mode((CONFIG.get('W'),CONFIG.get('H')))
     pygame.display.set_caption(CONFIG.get('caption'))
 
@@ -57,7 +58,7 @@ def main(config_filename):
 
 
     ## LOAD IN ENTITIES HERE
-    manager.world = World([1,0,0])
+    manager.world = world
     manager.agent_map = []
     manager.config = CONFIG
     manager.DS = DS
@@ -79,10 +80,11 @@ def main(config_filename):
         entity = {
             'pos':Position(well[0]*CONFIG.get('W'),well[1] * CONFIG.get("H")),
             'spritesheet':SpriteSheet("animation/assets/Well.png",4,2,DS),
-            'wellActive':WellActive(active = False),
+            'wellActive':WellActive( active = False ),
         }
         manager.create_entity(entity)
         manager.well_map.append(entity)
+    manager.well_map[world.current_day.correct_well].get('wellActive').active = True
 
     while True:
         ## LOOP THROUGH GAME SYSTEMS HERE
@@ -112,5 +114,12 @@ def main(config_filename):
 
 
 if __name__ == '__main__':
-    config_filename = None if len(sys.argv) < 2 else sys.argv[1]
-    main(config_filename)
+    try:
+        agent_nums = [int(sys.argv[0]),int(sys.argv[1]),int(sys.argv[2])]
+    except:
+        agent_nums=  [100,0,0]
+
+    pop = sum(agent_nums)
+    dist = np.array(agent_nums) / pop
+
+    main(World(dist,pop))

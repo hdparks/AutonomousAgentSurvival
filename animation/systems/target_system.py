@@ -19,7 +19,7 @@ class TargetSystem():
             vecnorm = np.linalg.norm(vec)
 
             # vec is less-than or equal to 10
-            if vecnorm > 50:
-                vec = vec * 50 / vecnorm
+            if vecnorm > 80:
+                vec = vec * 80 / vecnorm
 
             vel.value = vec

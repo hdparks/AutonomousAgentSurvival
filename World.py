@@ -86,7 +86,7 @@ class World():
                 Tools.percent_correct(obs,1),
                 Tools.percent_correct(obs,2)]
         print("End of day report")
-        print(dist)
+
 
         sorted_obs = obs[np.argsort(self.current_day.agent_order)]
         # Update health

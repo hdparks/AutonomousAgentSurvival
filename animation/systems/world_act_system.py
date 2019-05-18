@@ -18,8 +18,11 @@ class WorldActSystem():
             if spacebar_press.handled:
                 break
 
+            spacebar_press.handled = True
+
             if self.reset:
-                # Delete all entities
+
+                # Delete all agent entities
                 for entity in self.manager.agent_map:
                     self.manager.mark_for_deletion(entity)
 
@@ -37,14 +40,19 @@ class WorldActSystem():
                     self.manager.create_entity(entity)
                     self.manager.agent_map.append(entity)
 
+                # set the active well to active
+                for i in range(3):
+                    well = self.manager.well_map[i]
+                    well.get('wellActive').active = True if i == self.manager.world.current_day.correct_well else False
+
                 self.reset = False
                 return
 
-            spacebar_press.handled = True
 
             agent_index, choice, end_day = self.manager.world.act()
 
             if end_day:
+                spacebar_press.cooldown = 100
                 self.reset = True
 
             entity = self.manager.agent_map[agent_index]
